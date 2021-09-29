@@ -26,7 +26,7 @@ for name in files:
         col = msg.inner_start_index
         col_size = a[0].layout.dim[0].size
         row_size = a[0].layout.dim[1].size
-        
+        pdb.set_trace()
         b = np.array(a[0].data) #we only use the first layer since its the elevation layer, all others are variance, timestamp etc.,
         print(b.shape)
         offset = row + col*row_size
@@ -35,9 +35,13 @@ for name in files:
         c = np.empty((40000))
         c[:] = np.nan
         print(c.shape)
-        c[0:-offset] = b_offset
-        c[-offset::] = b[0:offset]
+        if offset == 0:
+            c = np.copy(b_offset)
+        else:
+            c[0:-offset] = b_offset
+            c[-offset::] = b[0:offset]
         c = c.reshape(200,200)
+        print(c[100:102, 100:102])
 
         if not os.path.exists(name[:-4]):
             os.makedirs(name[:-4])
